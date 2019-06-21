@@ -1,6 +1,9 @@
 package com.etaTech;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /****************************************************
  *** Created by Fady Fouad on 6/20/2019 at 14:45.***
  ***************************************************/
@@ -51,6 +54,49 @@ public class Main {
         System.out.println(alpha1.replaceAll("^abcd1*","-X-"));
 
         System.out.println(alpha1.replaceAll("o+p*f","-X-"));
+
+        System.out.println("\n------------------------------------------------");
+
+        StringBuilder stringHTML = new StringBuilder("<h1>Head h1<h1>");
+        stringHTML.append("\n"+"<h2>Head h2<h2>");
+        stringHTML.append("\n"+"<p>paragraph<p>");
+        stringHTML.append("\n"+"<p>another paragraph<p>");
+        stringHTML.append("\n"+"<h2>another Head h2<h2>");
+        stringHTML.append("\n"+"<p>last paragraph<p>");
+
+//        String h2Pattern = ".*<h2>.*";
+        String h2Pattern = "<h2>";
+        Pattern pattern =Pattern.compile(h2Pattern,Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE);
+        Matcher matcher = pattern.matcher(stringHTML);
+        System.out.println(matcher.matches());
+
+        matcher.reset();
+        int count = 0;
+        while (matcher.find()){
+            count++;
+            System.out.println("Occurrence "+count + " from "+ matcher.start()+ " to "+matcher.end());
+            System.out.println(stringHTML.substring(matcher.start(),matcher.end()));
+        }
+
+        System.out.println("\n-------------------------------------------");
+//        String h2PatternGroup = "(<h2>)";
+        String h2PatternGroup = "(<h2>.*?<h2>)";// Question mark turn greedy quantifier into lazy quantifier
+        Pattern groupPattern = Pattern.compile(h2PatternGroup);
+        Matcher groupMatcher = groupPattern.matcher(stringHTML);
+        System.out.println(groupMatcher.matches());
+        groupMatcher.reset();
+        while (groupMatcher.find()){
+            System.out.println(groupMatcher.group());
+        }
+
+        System.out.println("\n-------------------------------------------");
+        String htPatternGroups = "(<h2>)(.+?)(<h2>)";
+        Pattern h2TextPattern = Pattern.compile(htPatternGroups);
+        Matcher h2TextMatcher = h2TextPattern.matcher(stringHTML);
+        while (h2TextMatcher.find()){
+            System.out.println(h2TextMatcher.group());
+            System.out.println(h2TextMatcher.group(2));
+        }
 
     }
 }
